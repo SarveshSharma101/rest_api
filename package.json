@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "dump-to-local": "mongodump --db=UserDb"
+    "dump-to-local": "mongodump --db=UserDb",
+    "restoreDb": "mongorestore dump/"
   },
   "author": "",
   "license": "ISC",
