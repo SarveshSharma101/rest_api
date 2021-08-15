@@ -1,6 +1,8 @@
 const express = require('express')
 const userModel = require('./models/userModel')
 const {validateFeilds, checkUserNameAvailability} = require('./userMiddleware/signUpCheck.js')
+const {validateLoginFeilds, checkUserAndPassword} = require('./userMiddleware/loginCheck.js')
+const {validateLogoutFeilds} = require('./userMiddleware/logoutCheck.js')
 
 const router = express.Router()
 
@@ -37,8 +39,26 @@ router.post('/signUp', async (req, res)=>{
 
 })
 
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ LOGIN API @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+router.use('/login', validateLoginFeilds)
+router.put('/login', async (req, res)=>{
+  const {userName, password} = req.body
+  const _checkUserAndPassword = await checkUserAndPassword(userName, password)
 
+  if(_checkUserAndPassword.success){
+    await userModel.updateOne({"userName":userName}, {$set:{userLoginStatus:true}})
+    return res.json({success:true, message: "Login successful."})
+  }else{
+    return res.status(400).json(_checkUserAndPassword)
+  }
+})
 
-
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ LOGOUT API @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+router.use('/logout/:userName', validateLogoutFeilds)
+router.put('/logout/:userName', async (req, res)=>{
+  const {userName} = req.params
+  await userModel.updateOne({"userName":userName}, {$set:{userLoginStatus:false}})
+  return res.json({success:true, message: "Logout successful."})
+})
 
 module.exports = router
