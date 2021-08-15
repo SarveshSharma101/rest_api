@@ -3,24 +3,24 @@ const mongoose = require('mongoose')
 var schema = mongoose.Schema
 
 var userModel = new schema({
-    "UserEmail":{
+    "userEmail":{
         type: String,
         required: true
     },
-    "UserName":{
+    "userName":{
         type: String,
         required: true
     },
-    "UserPassword":{
+    "password":{
         type: String,
         min: [8, "Password is too short. Min 8 character required!!!"],
         required: true
     },
-    "UserLoginStatus":{
+    "userLoginStatus":{
         type: Boolean,
         default: false
     },
-    "UserStatus":{
+    "userStatus":{
         type: String,
         default: `Hello world, I am a user!!!.`
     }
